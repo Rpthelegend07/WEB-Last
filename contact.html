@@ -44,19 +44,19 @@
           <form id="contactForm">
             <div class="mb-3">
               <label for="contactName" class="form-label">Name</label>
-              <input type="text" class="form-control form-control-lg" id="contactName" placeholder="Your Name">
+              <input type="text" class="form-control form-control-lg" id="contactName" placeholder="Your Name" name="name">
             </div>
             <div class="mb-3">
               <label for="contactEmail" class="form-label">Email</label>
-              <input type="email" class="form-control form-control-lg" id="contactEmail" placeholder="Your Email">
+              <input type="email" class="form-control form-control-lg" id="contactEmail" placeholder="Your Email" name="email">
             </div>
             <div class="mb-3">
               <label for="contactSubject" class="form-label">Subject</label>
-              <input type="text" class="form-control form-control-lg" id="contactSubject" placeholder="Subject">
+              <input type="text" class="form-control form-control-lg" id="contactSubject" placeholder="Subject" name="subject">
             </div>
             <div class="mb-3">
               <label for="contactMessage" class="form-label">Message</label>
-              <textarea class="form-control form-control-lg" id="contactMessage" rows="5" placeholder="Your Message"></textarea>
+              <textarea class="form-control form-control-lg" id="contactMessage" rows="5" placeholder="Your Message" name="message"></textarea>
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
@@ -80,5 +80,37 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/main.js"></script>
+  <script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+      e.preventDefault();
+    
+      const formData = new FormData(this);
+    
+      fetch("http://localhost:5000/submit-form", {
+        method: "POST",
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          subject: formData.get("subject"),
+          message: formData.get("message")
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Message sent successfully!");
+          this.reset();
+        } else {
+          alert("Failed to send. Try again.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Something went wrong.");
+      });
+    });
+    </script>
 </body>
 </html>
